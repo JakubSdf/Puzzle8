@@ -12,7 +12,7 @@ class PuzzleGUI:
         self.tiles = [[0 for _ in range(self.size)] for _ in range(self.size)]
 
         label_font = ('Arial', 12, 'bold')
-        button_font = ('Helvetica', 16)
+        button_font = ('Arial', 16)
         frame_bg = '#f0f0f0'
         button_bg = '#e1e1e1'
 
@@ -121,7 +121,11 @@ class PuzzleGUI:
 
         # A* hledaci algoritmus
         solution, nodes_explored = a_star_search(initial_board)
-        self.nodes_explored = nodes_explored  # Update nodes explored count
+        
+
+        self.move_count = 0
+        self.move_label.config(text=f"Moves: {self.move_count}")
+        self.nodes_explored = nodes_explored  
         self.nodes_label.config(text=f"Nodes explored: {self.nodes_explored}")
 
         if solution:
@@ -130,16 +134,24 @@ class PuzzleGUI:
             print("Nenalezeno zadne reseni")
 
     def animate_solution(self, solution):
-        for board in solution:
-            self.started = True
-            board_state = board.get_state()
-            self.move_label.config(text=f"Moves: {self.move_count}")
-            self.update_board(board_state)
-            self.master.update()
-            self.master.after(500)
-            self.master.update_idletasks() 
-            self.move_count += 1
+        count = 0
+        with open('solution_steps.txt', 'w') as f:
+            for step_number, board in enumerate(solution, start=1):
+                self.started = True
+                board_state = board.get_state()
+                self.move_label.config(text=f"Moves: {self.move_count}")
+                self.update_board(board_state)
+                self.master.update()
+                self.master.after(500)
+                self.master.update_idletasks() 
+                f.write(f"{step_number}.\n")  
+                for row in board.get_state():
+                    f.write(' '.join(str(tile) for tile in row) + '\n')
+            
+                f.write("-" * 16 + "\n\n")  
 
+                self.move_count += 1
+                self.move_label.config(text=f"Moves: {self.move_count}")
 
 
 if __name__ == "__main__":
