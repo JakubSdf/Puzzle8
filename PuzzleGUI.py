@@ -6,34 +6,44 @@ from PuzzleSolver import a_star_search
 class PuzzleGUI:
     def __init__(self, master):
         self.master = master
-        self.master.title("Puzzle 8")
         self.size = 3
-        self.tiles = [[0] * self.size for _ in range(self.size)] # Placeholder pro stav puzzle
         self.nodes_explored = 0
-        self.move_count = 1
-        self.nodes_label = tk.Label(master, text=f"Nodes explored: {self.nodes_explored}")
-        self.nodes_label.grid(row=self.size + 3, column=0, columnspan=self.size, sticky="ew")
+        self.move_count = 0
+        self.tiles = [[0 for _ in range(self.size)] for _ in range(self.size)]
 
-        self.move_label = tk.Label(master, text=f"Moves: {self.move_count - 1}")
-        self.move_label.grid(row=self.size + 2, column=0, columnspan=self.size, sticky="ew")
-    
+        label_font = ('Arial', 12, 'bold')
+        button_font = ('Helvetica', 16)
+        frame_bg = '#f0f0f0'
+        button_bg = '#e1e1e1'
+
+        grid_frame = tk.Frame(master, bg=frame_bg)
+        grid_frame.grid(row=0, column=0, padx=10, pady=10, sticky="nsew")
+
         self.buttons = [[None for _ in range(self.size)] for _ in range(self.size)]
         for i in range(self.size):
             for j in range(self.size):
-                button = tk.Button(master, text='', height=4, width=8,
+                button = tk.Button(grid_frame, text='', height=4, width=8, font=button_font, bg=button_bg,
                                    command=lambda row=i, col=j: self.move_tile(row, col))
-                button.grid(row = i, column = j)
+                button.grid(row=i, column=j, padx=5, pady=5)
                 self.buttons[i][j] = button
-        
-        control_frame = tk.Frame(master)
-        control_frame.grid(row=self.size, column=0, columnspan=self.size, sticky="ew")
 
-        self.shuffle_button = tk.Button(control_frame, text="Shuffle", command=self.shuffle)
-        self.shuffle_button.pack(side="left", expand=True, fill="x")
+        status_frame = tk.Frame(master, bg=frame_bg)
+        status_frame.grid(row=1, column=0, padx=10, pady=10, sticky="ew")
 
-        self.solve_button = tk.Button(control_frame, text="Solve", command=self.solve)
-        self.solve_button.pack(side="right", expand=True, fill="x")
+        self.nodes_label = tk.Label(status_frame, text=f"Nodes explored: {self.nodes_explored}", font=label_font)
+        self.nodes_label.pack(side="left", expand=True, fill="x")
 
+        self.move_label = tk.Label(status_frame, text=f"Moves: {self.move_count}", font=label_font)
+        self.move_label.pack(side="right", expand=True, fill="x")
+
+        control_frame = tk.Frame(master, bg=frame_bg)
+        control_frame.grid(row=2, column=0, padx=10, pady=5, sticky="ew")
+
+        self.shuffle_button = tk.Button(control_frame, text="Shuffle", command=self.shuffle, font=button_font, bg=button_bg)
+        self.shuffle_button.pack(side="left", expand=True, fill="x", padx=5)
+
+        self.solve_button = tk.Button(control_frame, text="Solve", command=self.solve, font=button_font, bg=button_bg)
+        self.solve_button.pack(side="right", expand=True, fill="x", padx=5)
         self.init_board()
 
     def init_board(self):
@@ -96,7 +106,7 @@ class PuzzleGUI:
 
     def update_board(self, new_state=None):
         if new_state is None:
-            new_state = self.tiles  # Assuming self.tiles holds the current state
+            new_state = self.tiles  
         
         for i in range(self.size):
             for j in range(self.size):
@@ -122,18 +132,20 @@ class PuzzleGUI:
     def animate_solution(self, solution):
         for board in solution:
             self.started = True
-            board_state = board.get_state()  # Adjust based on your Board class
+            board_state = board.get_state()
             self.move_label.config(text=f"Moves: {self.move_count}")
             self.update_board(board_state)
             self.master.update()
             self.master.after(500)
-            self.master.update_idletasks()  # Ensure the GUI updates are drawn
+            self.master.update_idletasks() 
             self.move_count += 1
 
 
 
 if __name__ == "__main__":
     root = tk.Tk()
-    root.geometry("600x400")
+    root.iconbitmap('image.ico')
+    root.title("Puzzle 8 pro Pepeho")
     app = PuzzleGUI(root)
+    root.geometry("370x500") 
     root.mainloop()
