@@ -43,22 +43,3 @@ def reconstruct_path(node):
         node = node.parent
     return path[::-1] # vrati obracenou cestu
         
-'''
-
-initial_states = [
-    ([[1, 2, 3], [4, 5, 6], [7, 0, 8]], "Easy"),
-    ([[1, 2, 3], [5, 0, 6], [4, 7, 8]], "Medium"),
-    ([[2, 8, 1], [0, 4, 3], [7, 6, 5]], "Hard"),
-    ([[8, 6, 7], [2, 5, 4], [3, 0, 1]], "Very Hard")
-]
-
-for tiles, difficulty in initial_states:
-    board = Board(tiles)
-    print(f"Testing {difficulty} puzzle:")
-    solution = a_star_search(board)
-    if solution:
-        print(f"Solved in {len(solution) - 1} moves.\n")
-    else:
-        print("No solution found.\n")
-
-'''

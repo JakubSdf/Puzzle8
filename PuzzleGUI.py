@@ -9,6 +9,10 @@ class PuzzleGUI:
         self.master.title("Puzzle 8")
         self.size = 3
         self.tiles = [[0] * self.size for _ in range(self.size)] # Placeholder pro stav puzzle
+        self.move_count = 1
+        self.started = False  # Initialize move count
+        self.move_label = tk.Label(master, text=f"Moves: {self.move_count}")
+        self.move_label.grid(row=self.size + 2, column=0, columnspan=self.size, sticky="ew")
 
         self.buttons = [[None for _ in range(self.size)] for _ in range(self.size)]
         for i in range(self.size):
@@ -46,6 +50,9 @@ class PuzzleGUI:
             blank_row, blank_col = self.find_blank()
             self.swap_tiles(row, col, blank_row, blank_col)
             self.update_board()
+            self.move_count += 1
+            self.move_label.config(text=f"Moves: {self.move_count}")
+
 
     def is_neighbor_blank(self, row, col):
         blank_row, blank_col = self.find_blank()
@@ -59,6 +66,8 @@ class PuzzleGUI:
                 chosen_row, chosen_col = random.choice(neighbors)
                 self.swap_tiles(blank_row, blank_col, chosen_row, chosen_col)
             self.update_board()
+            self.move_count = 0
+            self.move_label.config(text=f"Moves: {self.move_count}")
 
     def find_blank(self):
         for i in range(self.size):
@@ -104,14 +113,19 @@ class PuzzleGUI:
 
     def animate_solution(self, solution):
         for board in solution:
+            self.started = True
             board_state = board.get_state()  # Adjust based on your Board class
+            self.move_label.config(text=f"Moves: {self.move_count}")
             self.update_board(board_state)
             self.master.update()
             self.master.after(500)
             self.master.update_idletasks()  # Ensure the GUI updates are drawn
+            self.move_count += 1
+
 
 
 if __name__ == "__main__":
     root = tk.Tk()
+    root.geometry("600x400")
     app = PuzzleGUI(root)
     root.mainloop()
