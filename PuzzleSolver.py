@@ -43,6 +43,7 @@ def reconstruct_path(node):
         node = node.parent
     return path[::-1] # vrati obracenou cestu
         
+'''
 
 initial_states = [
     ([[1, 2, 3], [4, 5, 6], [7, 0, 8]], "Easy"),
@@ -59,3 +60,5 @@ for tiles, difficulty in initial_states:
         print(f"Solved in {len(solution) - 1} moves.\n")
     else:
         print("No solution found.\n")
+
+'''

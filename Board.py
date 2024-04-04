@@ -19,6 +19,9 @@ class Board:
                     return row, col
         return -1, -1 # pokud je board validni, nemelo by se to stat
 
+    def get_state(self):
+        return self.tiles
+
     def neighbors(self):
         moves = []
         directions = [(0, 1), (1, 0), (0, -1), (-1, 0)]  # Doprava, Dolu, Doleva, Nahoru
