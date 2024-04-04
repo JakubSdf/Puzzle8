@@ -76,3 +76,4 @@ class Board:
         # pro puzzle 8 velikost boardu je licha --> zjistime jestli je inversion sudy
         return inv_count % 2 == 0
 
+
