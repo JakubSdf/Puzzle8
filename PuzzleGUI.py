@@ -9,11 +9,14 @@ class PuzzleGUI:
         self.master.title("Puzzle 8")
         self.size = 3
         self.tiles = [[0] * self.size for _ in range(self.size)] # Placeholder pro stav puzzle
+        self.nodes_explored = 0
         self.move_count = 1
-        self.started = False  # Initialize move count
-        self.move_label = tk.Label(master, text=f"Moves: {self.move_count}")
-        self.move_label.grid(row=self.size + 2, column=0, columnspan=self.size, sticky="ew")
+        self.nodes_label = tk.Label(master, text=f"Nodes explored: {self.nodes_explored}")
+        self.nodes_label.grid(row=self.size + 3, column=0, columnspan=self.size, sticky="ew")
 
+        self.move_label = tk.Label(master, text=f"Moves: {self.move_count - 1}")
+        self.move_label.grid(row=self.size + 2, column=0, columnspan=self.size, sticky="ew")
+    
         self.buttons = [[None for _ in range(self.size)] for _ in range(self.size)]
         for i in range(self.size):
             for j in range(self.size):
@@ -68,6 +71,9 @@ class PuzzleGUI:
             self.update_board()
             self.move_count = 0
             self.move_label.config(text=f"Moves: {self.move_count}")
+            self.nodes_explored = 0
+            self.nodes_label.config(text=f"Nodes explored: {self.nodes_explored}")
+
 
     def find_blank(self):
         for i in range(self.size):
@@ -99,12 +105,14 @@ class PuzzleGUI:
                 self.buttons[i][j]['text'] = button_text
 
     def solve(self):
-        current_state = [[int(self.buttons[i][j]['text']) if self.buttons[i][j]['text'] else 0
+        initial_state = [[int(self.buttons[i][j]['text']) if self.buttons[i][j]['text'] else 0
                               for j in range(self.size)] for i in range(self.size)]
-        board = Board(current_state)
+        initial_board = Board(initial_state)
 
         # A* hledaci algoritmus
-        solution = a_star_search(board)
+        solution, nodes_explored = a_star_search(initial_board)
+        self.nodes_explored = nodes_explored  # Update nodes explored count
+        self.nodes_label.config(text=f"Nodes explored: {self.nodes_explored}")
 
         if solution:
             self.animate_solution(solution)

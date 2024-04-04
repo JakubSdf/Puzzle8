@@ -16,25 +16,24 @@ def a_star_search(initial_board):
     start_node = Node(initial_board, None, 0)
     open_set = []
     heapq.heappush(open_set, (start_node.f, start_node))
-
     visited = set()
+    nodes_explored = 0
 
     while open_set:
         current_node = heapq.heappop(open_set)[1]
+        nodes_explored += 1
 
         if current_node.board.isGoal():
-            return reconstruct_path(current_node)
-        
+            return reconstruct_path(current_node), nodes_explored
+
         visited.add(str(current_node.board))
-        
         for neighbor in current_node.board.neighbors():
             if str(neighbor) in visited:
                 continue
             neighbor_node = Node(neighbor, current_node, current_node.g + 1)
-            
             heapq.heappush(open_set, (neighbor_node.f, neighbor_node))
 
-    return None
+    return None, nodes_explored
 
 def reconstruct_path(node):
     path = []
@@ -42,4 +41,3 @@ def reconstruct_path(node):
         path.append(node.board)
         node = node.parent
     return path[::-1] # vrati obracenou cestu
-        
